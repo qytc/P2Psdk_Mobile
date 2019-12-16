@@ -1,5 +1,0 @@
-com.ml.android.eventcore
-drawable ic_launcher
-string app_name
-style AppBaseTheme
-style AppTheme
