@@ -38,8 +38,9 @@ public class DoHttpManager {
     /**
      * 登录
      */
-    public void auth(Activity activity, String number, String password, String deviceId) {
+    public void auth(Activity activity, String number, String password) {
         TerminalHttpService terminalHttpService = HttpManager.getInstance().getRetrofit().create(TerminalHttpService.class);
+        String deviceId = SpUtil.getString(activity, SpConstant.JPUSH_DEVICE_ID);
         terminalHttpService.auth(SpConstant.APP_ID, String.valueOf(SpConstant.type), number, password, deviceId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -134,7 +135,7 @@ public class DoHttpManager {
     }
 
     /**
-     * 同意接听
+         * 同意接听
      */
     public void acceptCall(Activity activity, String pmi) {
         TerminalHttpService terminalHttpService = HttpManager.getInstance().getRetrofit().create(TerminalHttpService.class);

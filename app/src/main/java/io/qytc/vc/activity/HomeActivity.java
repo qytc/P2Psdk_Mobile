@@ -45,7 +45,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         initView();
         EventBusUtil.register(this);
-
         checkPermission();
     }
 

@@ -69,8 +69,8 @@ public class MainActivity extends Activity {
     }
 
     private void login(String loginStr, String pwdStr) {
-        String deviceId = SpUtil.getString(this, SpConstant.JPUSH_DEVICE_ID);
-        DoHttpManager.getInstance().auth(this, loginStr, pwdStr, deviceId);
+
+        DoHttpManager.getInstance().auth(this, loginStr, pwdStr);
     }
 
     @Override

@@ -13,13 +13,6 @@ public class TRTCApplication extends MultiDexApplication {
         super.onCreate();
         mInstance = this;
         sdkCore=new SDKCore(mInstance);
-
         sdkCore.initJpush();
     }
-
-
-
-
-
-
 }
