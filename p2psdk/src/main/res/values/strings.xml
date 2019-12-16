@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">P2PCallDemo_Mobile</string>
+    <string name="no_IC_card_num">未检测到IC卡号</string>
+    <string name="login_success">登陆成功</string>
+    <string name="unregister">终端未注册，请联系管理员</string>
+    <string name="target_number">对方号码:</string>
+    <string name="call">呼叫</string>
+    <string name="please_input_number">请输入对方号码</string>
+    <string name="person_number">个人号码:</string>
+    <string name="call_has_ended">通话已结束</string>
+    <string name="target_user_is_busy">您呼叫的用户忙，请稍后再拨</string>
+</resources>

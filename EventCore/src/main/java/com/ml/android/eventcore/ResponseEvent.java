@@ -1,4 +1,4 @@
-package com.ml.android.eventcore;
+package io.qytc.p2psdk.eventcore;
 
 public class ResponseEvent implements IEvent{
     public static final int STATUS_OK = 1;

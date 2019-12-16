@@ -1,4 +1,4 @@
-package com.ml.android.eventcore;
+package io.qytc.p2psdk.eventcore;
 
 
 public class UIEvent implements IEvent{

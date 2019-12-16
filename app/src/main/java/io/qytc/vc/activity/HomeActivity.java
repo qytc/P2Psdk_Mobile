@@ -15,19 +15,21 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.ml.android.eventcore.EventBusUtil;
-import com.ml.android.eventcore.ResponseEvent;
+import io.qytc.p2psdk.activity.ActivityCall;
+import io.qytc.p2psdk.constant.SpConstant;
+import io.qytc.p2psdk.eventcore.EventBusUtil;
+import io.qytc.p2psdk.eventcore.ResponseEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.qytc.p2psdk.http.DoHttpManager;
+import io.qytc.p2psdk.http.ResponseEventStatus;
+import io.qytc.p2psdk.http.response.CreatConfResponse;
+import io.qytc.p2psdk.utils.SpUtil;
+import io.qytc.p2psdk.utils.ToastUtils;
 import io.qytc.vc.R;
-import io.qytc.vc.constant.SpConstant;
-import io.qytc.vc.http.DoHttpManager;
-import io.qytc.vc.http.ResponseEventStatus;
-import io.qytc.vc.http.response.CreatConfResponse;
-import io.qytc.vc.utils.SpUtil;
-import io.qytc.vc.utils.ToastUtils;
+
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 

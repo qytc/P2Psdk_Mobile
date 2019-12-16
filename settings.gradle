@@ -1,2 +1,2 @@
-include ':app', ':EventCore'
-rootProject.name='P2PCallDemo_Mobile'
+include ':app', ':p2psdk'
+rootProject.name='P2Psdk_Mobile'

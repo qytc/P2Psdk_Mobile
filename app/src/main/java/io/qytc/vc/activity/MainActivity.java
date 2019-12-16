@@ -9,22 +9,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.ml.android.eventcore.EventBusUtil;
-import com.ml.android.eventcore.ResponseEvent;
+import io.qytc.p2psdk.eventcore.EventBusUtil;
+import io.qytc.p2psdk.eventcore.ResponseEvent;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.qytc.vc.R;
-import io.qytc.vc.constant.SpConstant;
-import io.qytc.vc.http.DoHttpManager;
-import io.qytc.vc.http.ResponseEventStatus;
-import io.qytc.vc.http.response.LoginResponse;
-import io.qytc.vc.service.SocketConnectService;
-import io.qytc.vc.utils.SpUtil;
-import io.qytc.vc.utils.ToastUtils;
+import io.qytc.p2psdk.constant.SpConstant;
+import io.qytc.p2psdk.http.DoHttpManager;
+import io.qytc.p2psdk.http.ResponseEventStatus;
+import io.qytc.p2psdk.http.response.LoginResponse;
+import io.qytc.p2psdk.service.SocketConnectService;
+import io.qytc.p2psdk.utils.SpUtil;
+import io.qytc.p2psdk.utils.ToastUtils;
 
 public class MainActivity extends Activity {
 

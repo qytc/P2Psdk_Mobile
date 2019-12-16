@@ -1,4 +1,4 @@
-package com.ml.android.eventcore;
+package io.qytc.p2psdk.eventcore;
 
 /**
  * Reserved event id. These event ids should not be used elsewhere.
