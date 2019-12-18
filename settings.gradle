@@ -1,2 +1,1 @@
 include ':app', ':p2psdk'
-rootProject.name='P2Psdk_Mobile'
