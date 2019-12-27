@@ -11,8 +11,6 @@ public class UIEventStatus {
 
     public static final int J_PUSH_BASE_ID = 2100;
 
-    public static final int JPUSH_REFUSE_CALL = J_PUSH_BASE_ID + 1;
-
     public static final int JPUSH_ACCEPT_CALL = J_PUSH_BASE_ID + 2;
 
 }

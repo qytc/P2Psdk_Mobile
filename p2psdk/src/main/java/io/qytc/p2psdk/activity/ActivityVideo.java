@@ -19,12 +19,11 @@ import com.tencent.trtc.TRTCCloudListener;
 
 import java.lang.ref.WeakReference;
 
+import io.qytc.p2psdk.R;
 import io.qytc.p2psdk.SDKCore;
+import io.qytc.p2psdk.constant.SpConstant;
 import io.qytc.p2psdk.eventcore.EventBusUtil;
 import io.qytc.p2psdk.eventcore.UIEvent;
-import io.qytc.p2psdk.R;
-
-import io.qytc.p2psdk.constant.SpConstant;
 import io.qytc.p2psdk.http.DoHttpManager;
 import io.qytc.p2psdk.http.UIEventStatus;
 import io.qytc.p2psdk.utils.DevicesUtils;
@@ -47,7 +46,7 @@ public class ActivityVideo extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_video);
 
         mActivity = this;
@@ -107,7 +106,7 @@ public class ActivityVideo extends Activity {
             Log.i(TAG, "--onError() , errCode = " + errCode + " errMsg =" + errMsg);
             ActivityVideo activity = mContext.get();
             if (activity != null) {
-                ToastUtils.toast(activity, "发生错误: " + errMsg + "[" + errCode + "]",false);
+                ToastUtils.toast(activity, "发生错误: " + errMsg + "[" + errCode + "]", false);
                 if (errCode == TXLiteAVCode.ERR_ROOM_ENTER_FAIL) {  //严重错误，退出房间
                     activity.exitRoom();
                 }
@@ -134,6 +133,8 @@ public class ActivityVideo extends Activity {
 
             activity.mTrtcCloud.stopRemoteView(userId);
             activity.videoLayout.onMemberLeave(userId);
+            ToastUtils.toast(activity, "对方已退出房间", false);
+            activity.exitRoom();
         }
 
         /**
@@ -198,12 +199,12 @@ public class ActivityVideo extends Activity {
 
         switch (event.getId()) {
             case UIEventStatus.END_CONF:
-                ToastUtils.toast(mActivity, getString(R.string.call_has_ended),false);
+                ToastUtils.toast(mActivity, getString(R.string.call_has_ended), false);
                 exitRoom();
                 break;
             case UIEventStatus.CONF_AUTO_CLOSE_NOTICE:
                 String message = event.getData();
-                ToastUtils.toast(mActivity, message,false);
+                ToastUtils.toast(mActivity, message, false);
                 break;
         }
     }

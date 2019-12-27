@@ -9,21 +9,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-
-import io.qytc.p2psdk.eventcore.EventBusUtil;
-import io.qytc.p2psdk.eventcore.ResponseEvent;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.qytc.vc.R;
 import io.qytc.p2psdk.constant.SpConstant;
+import io.qytc.p2psdk.eventcore.EventBusUtil;
+import io.qytc.p2psdk.eventcore.ResponseEvent;
 import io.qytc.p2psdk.http.DoHttpManager;
 import io.qytc.p2psdk.http.ResponseEventStatus;
 import io.qytc.p2psdk.http.response.LoginResponse;
-import io.qytc.p2psdk.service.SocketConnectService;
+import io.qytc.p2psdk.service.SocketHelper;
 import io.qytc.p2psdk.utils.SpUtil;
 import io.qytc.p2psdk.utils.ToastUtils;
+import io.qytc.vc.R;
 
 public class MainActivity extends Activity {
 
@@ -107,7 +105,8 @@ public class MainActivity extends Activity {
                 SpUtil.saveString(this, SpConstant.TENANTID, tenantId + "");
                 SpUtil.saveString(this, SpConstant.ID, id + "");
 
-                startService(new Intent(this, SocketConnectService.class));
+                SocketHelper.getInstance().stop();
+                SocketHelper.getInstance().start(this);
 
                 ToastUtils.toast(this, R.string.login_success, false);
 

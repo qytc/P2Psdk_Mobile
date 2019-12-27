@@ -26,11 +26,6 @@ public interface TerminalHttpService {
     Observable<CreatConfResponse> p2pCall(@Field("pmi") String targetId, @Field("accessToken") String accessToken);
 
     @FormUrlEncoded
-    @POST("conference/refuseCall")
-    @Headers("Content-Type:application/x-www-form-urlencoded; charset=utf-8")
-    Observable<BaseResponse> refuseCall(@Field("pmi") String targetId, @Field("accessToken") String accessToken);
-
-    @FormUrlEncoded
     @POST("conference/acceptCall")
     @Headers("Content-Type:application/x-www-form-urlencoded; charset=utf-8")
     Observable<BaseResponse> acceptCall(@Field("pmi") String targetId, @Field("accessToken") String accessToken);

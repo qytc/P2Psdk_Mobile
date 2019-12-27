@@ -1,14 +1,16 @@
 package io.qytc.p2psdk.http;
 
 import android.app.Activity;
+import android.content.Intent;
 
+import io.qytc.p2psdk.activity.ActivityCall;
+import io.qytc.p2psdk.constant.SpConstant;
 import io.qytc.p2psdk.eventcore.EventBusUtil;
 import io.qytc.p2psdk.eventcore.ResponseEvent;
-import io.qytc.p2psdk.constant.SpConstant;
 import io.qytc.p2psdk.http.response.BaseResponse;
 import io.qytc.p2psdk.http.response.CreatConfResponse;
 import io.qytc.p2psdk.http.response.LoginResponse;
-import io.qytc.p2psdk.service.SocketConnectService;
+import io.qytc.p2psdk.service.SocketHelper;
 import io.qytc.p2psdk.utils.LoadingDialogUtil;
 import io.qytc.p2psdk.utils.SpUtil;
 import io.qytc.p2psdk.utils.ToastUtils;
@@ -53,7 +55,7 @@ public class DoHttpManager {
 
                     @Override
                     public void onError(ExceptionHandle.ResponeThrowable responeThrowable) {
-                        ToastUtils.toast(activity, responeThrowable.message,false);
+                        ToastUtils.toast(activity, responeThrowable.message, false);
                         LoadingDialogUtil.dismiss();
 
                         ResponseEvent event = new ResponseEvent(ResponseEventStatus.LOGIN_ID);
@@ -75,7 +77,7 @@ public class DoHttpManager {
                                 event.setStatus(ResponseEventStatus.UNREGISTERED);
                                 event.setMessage(loginResponse.getMsg());
                             } else {
-                                ToastUtils.toast(activity, loginResponse.getMsg(),false);
+                                ToastUtils.toast(activity, loginResponse.getMsg(), false);
                                 event.setStatus(ResponseEventStatus.ERROR);
                                 event.setMessage(loginResponse.getMsg());
                             }
@@ -91,10 +93,10 @@ public class DoHttpManager {
     /**
      * 呼叫联系人
      */
-    public void p2pCall(Activity activity, String pmi) {
+    public void p2pCall(Activity activity, String targetNumber) {
         TerminalHttpService terminalHttpService = HttpManager.getInstance().getRetrofit().create(TerminalHttpService.class);
         String accessToken = SpUtil.getString(activity, SpConstant.ACCESS_TOKEN);
-        terminalHttpService.p2pCall(pmi, accessToken)
+        terminalHttpService.p2pCall(targetNumber, accessToken)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new MySubscriber<CreatConfResponse>(activity) {
@@ -103,14 +105,14 @@ public class DoHttpManager {
                     public void onStart() {
                         super.onStart();
                         SpUtil.saveString(activity, SpConstant.INROOM, "2");
-                        SocketConnectService.getInstance().sendALiveData();
+                        SocketHelper.getInstance().sendALiveData();
                     }
 
                     @Override
                     public void onError(ExceptionHandle.ResponeThrowable responseThrowable) {
-                        ToastUtils.toast(activity, responseThrowable.message,false);
+                        ToastUtils.toast(activity, responseThrowable.message, false);
                         SpUtil.saveString(activity, SpConstant.INROOM, "0");
-                        SocketConnectService.getInstance().sendALiveData();
+                        SocketHelper.getInstance().sendALiveData();
                     }
 
                     @Override
@@ -122,7 +124,7 @@ public class DoHttpManager {
                     public void onNext(CreatConfResponse creatConfResponse) {
                         if (!creatConfResponse.getCode().equalsIgnoreCase("0")) {
                             SpUtil.saveString(activity, SpConstant.INROOM, "0");
-                            SocketConnectService.getInstance().sendALiveData();
+                            SocketHelper.getInstance().sendALiveData();
                             ToastUtils.toast(activity, creatConfResponse.getMsg(),false);
                         }else {
                             ResponseEvent event = new ResponseEvent(ResponseEventStatus.CREAT_P2PCALL);
@@ -135,7 +137,7 @@ public class DoHttpManager {
     }
 
     /**
-         * 同意接听
+     * 同意接听
      */
     public void acceptCall(Activity activity, String pmi) {
         TerminalHttpService terminalHttpService = HttpManager.getInstance().getRetrofit().create(TerminalHttpService.class);
@@ -152,7 +154,7 @@ public class DoHttpManager {
 
                     @Override
                     public void onError(ExceptionHandle.ResponeThrowable responseThrowable) {
-                        ToastUtils.toast(activity, responseThrowable.message,false);
+                        ToastUtils.toast(activity, responseThrowable.message, false);
                     }
 
                     @Override
@@ -162,44 +164,14 @@ public class DoHttpManager {
 
                     @Override
                     public void onNext(BaseResponse baseResponse) {
+                        ResponseEvent event = new ResponseEvent(ResponseEventStatus.CALL_ACCEPT);
                         if (baseResponse.getCode().equalsIgnoreCase("0")) {
-                            ResponseEvent event = new ResponseEvent(ResponseEventStatus.CALL_ACCEPT);
                             event.setStatus(ResponseEventStatus.OK);
-                            EventBusUtil.post(event);
+                        } else {
+                            event.setStatus(ResponseEventStatus.ERROR);
                         }
-                    }
-                });
-    }
-
-    /**
-     * 拒绝接听
-     */
-    public void refuseCall(Activity activity, String pmi) {
-        TerminalHttpService terminalHttpService = HttpManager.getInstance().getRetrofit().create(TerminalHttpService.class);
-        String accessToken = SpUtil.getString(activity, SpConstant.ACCESS_TOKEN);
-        terminalHttpService.refuseCall(pmi, accessToken)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new MySubscriber<BaseResponse>(activity) {
-
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                    }
-
-                    @Override
-                    public void onError(ExceptionHandle.ResponeThrowable responseThrowable) {
-                        SocketConnectService.getInstance().sendALiveData();
-                    }
-
-                    @Override
-                    public void onCompleted() {
-                        super.onCompleted();
-                    }
-
-                    @Override
-                    public void onNext(BaseResponse baseResponse) {
-
+                        event.setMessage(baseResponse.getMsg());
+                        EventBusUtil.post(event);
                     }
                 });
     }
@@ -222,7 +194,7 @@ public class DoHttpManager {
 
                     @Override
                     public void onError(ExceptionHandle.ResponeThrowable responseThrowable) {
-
+                        ToastUtils.toast(activity, responseThrowable.message, false);
                     }
 
                     @Override

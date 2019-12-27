@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import io.qytc.p2psdk.R;
+import io.qytc.p2psdk.constant.SpConstant;
 import io.qytc.p2psdk.eventcore.EventBusUtil;
 import io.qytc.p2psdk.eventcore.ResponseEvent;
 import io.qytc.p2psdk.eventcore.UIEvent;
-import io.qytc.p2psdk.R;
-import io.qytc.p2psdk.constant.SpConstant;
 import io.qytc.p2psdk.http.DoHttpManager;
 import io.qytc.p2psdk.http.ResponseEventStatus;
 import io.qytc.p2psdk.http.UIEventStatus;
@@ -53,14 +53,14 @@ public class ActivityCall extends Activity implements View.OnClickListener {
     }
 
     private void initData() {
-        SpUtil.saveString(this, SpConstant.INROOM, "2");
-        SpUtil.saveString(this, SpConstant.JOIN_PMI, "0");
-
         Intent intent = getIntent();
         mCall_type = intent.getIntExtra(CALL_TYPE, CALL_OUT);
         mTargetName = intent.getStringExtra(TARGET_NAME);
         mRoomPmi = intent.getStringExtra(ROOM_PMI);
         mTargetPmi = intent.getStringExtra(TARGET_PMI);
+
+        SpUtil.saveString(this, SpConstant.INROOM, "2");
+        SpUtil.saveString(this, SpConstant.JOIN_PMI, mRoomPmi);
 
         mHandler.postDelayed(mTimeOutRunnable, 30 * 1000);
     }
@@ -93,7 +93,7 @@ public class ActivityCall extends Activity implements View.OnClickListener {
     private Runnable mTimeOutRunnable = new Runnable() {
         @Override
         public void run() {
-            DoHttpManager.getInstance().refuseCall(ActivityCall.this, mRoomPmi);
+            DoHttpManager.getInstance().endP2PCall(ActivityCall.this, mRoomPmi);
             cancelCall();
         }
     };
@@ -136,16 +136,10 @@ public class ActivityCall extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-
-        if(view.getId()==R.id.iv_accept){
+        if (view.getId() == R.id.iv_accept) {
             DoHttpManager.getInstance().acceptCall(this, mRoomPmi);
-
-        }else if(view.getId()==R.id.iv_hangup){
-            if (mCall_type == CALL_IN) {
-                DoHttpManager.getInstance().refuseCall(this, mRoomPmi);
-            } else {
-                DoHttpManager.getInstance().endP2PCall(this, mRoomPmi);
-            }
+        } else if (view.getId() == R.id.iv_hangup) {
+            DoHttpManager.getInstance().endP2PCall(this, mRoomPmi);
             cancelCall();
         }
     }
@@ -153,21 +147,24 @@ public class ActivityCall extends Activity implements View.OnClickListener {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            DoHttpManager.getInstance().refuseCall(ActivityCall.this, mRoomPmi);
+            DoHttpManager.getInstance().endP2PCall(ActivityCall.this, mRoomPmi);
             cancelCall();
         }
         return super.onKeyDown(keyCode, event);
     }
 
     public void onEventMainThread(ResponseEvent event) {
-        if (event == null || event.getStatus() != ResponseEventStatus.OK) {
+        if (event == null) {
             return;
         }
 
-        switch (event.getId()) {
-            case ResponseEventStatus.CALL_ACCEPT:
+        if (event.getId() == ResponseEventStatus.CALL_ACCEPT) {
+            if (event.getStatus() == ResponseEventStatus.OK) {
                 acceptCall();
-                break;
+            } else {
+                ToastUtils.toast(ActivityCall.this, event.getMessage(), false);
+                cancelCall();
+            }
         }
     }
 
@@ -178,9 +175,11 @@ public class ActivityCall extends Activity implements View.OnClickListener {
 
         switch (event.getId()) {
             case UIEventStatus.END_CONF:
-                cancelCall();
-            case UIEventStatus.JPUSH_REFUSE_CALL:
-                ToastUtils.toast(ActivityCall.this, R.string.target_user_is_busy,false);
+                if (mCall_type == CALL_IN) {
+                    ToastUtils.toast(ActivityCall.this, R.string.target_cancel_call, false);
+                } else {
+                    ToastUtils.toast(ActivityCall.this, R.string.target_user_is_busy, false);
+                }
                 cancelCall();
                 break;
             case UIEventStatus.JPUSH_ACCEPT_CALL:

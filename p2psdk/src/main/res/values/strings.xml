@@ -9,4 +9,5 @@
     <string name="person_number">个人号码:</string>
     <string name="call_has_ended">通话已结束</string>
     <string name="target_user_is_busy">您呼叫的用户忙，请稍后再拨</string>
+    <string name="target_cancel_call">对方已取消通话</string>
 </resources>
