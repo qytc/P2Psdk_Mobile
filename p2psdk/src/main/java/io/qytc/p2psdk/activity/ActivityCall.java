@@ -20,6 +20,7 @@ import io.qytc.p2psdk.eventcore.UIEvent;
 import io.qytc.p2psdk.http.DoHttpManager;
 import io.qytc.p2psdk.http.ResponseEventStatus;
 import io.qytc.p2psdk.http.UIEventStatus;
+import io.qytc.p2psdk.service.SocketHelper;
 import io.qytc.p2psdk.utils.SpUtil;
 import io.qytc.p2psdk.utils.ToastUtils;
 
@@ -50,6 +51,10 @@ public class ActivityCall extends Activity implements View.OnClickListener {
         initData();
 
         initView();
+
+        SocketHelper.getInstance().stop();
+
+        SocketHelper.getInstance().start(getApplicationContext());
     }
 
     private void initData() {
